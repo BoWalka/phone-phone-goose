@@ -26,7 +26,26 @@ pip install -r requirements.txt
 python degrade.py  # Spits out stats & WAVs in outputs/
 Tweak degrade_audio() for your flavor of ruin.
 
+Tweak degrade_audio() for your flavor of ruin.
 
+
+
+Build the App (React Native + Expo)
+
+cd app
+npx create-expo-app . --template blank
+npm install expo-av expo-bluetooth @react-native-async-storage/async-storage
+expo start  # QR scan to phones
+
+Expo AV for record/play.
+Bluetooth Low Energy (BLE) for sync (or Firebase Realtime DB for cloud handoff).
+Degrade via Web Audio API polyfill or TarsosDSP lib.
+
+🛠️ Customization
+
+Degradation Modes: Basic (filter+noise) | Neural (TensorFlow Lite auto-encoder) | Custom (add reverb, reverse chunks).
+Sync Options: Local BLE mesh | Cloud pub-sub | Audio beacons (hidden chirps).
+Outputs: Log waveforms, export chain as video, share to X/TikTok.
 
 
 
