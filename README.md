@@ -31,7 +31,7 @@ Tweak degrade_audio() for your flavor of ruin.
 
 
 Build the App (React Native + Expo)
-
+bash
 cd app
 npx create-expo-app . --template blank
 npm install expo-av expo-bluetooth @react-native-async-storage/async-storage
