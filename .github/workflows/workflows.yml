@@ -1,32 +1,45 @@
-# This is a basic workflow that is manually triggered
 
-name: Manual workflow
+name: Entropy Test Runner 🌀🛡️
 
-# Controls when the action will run. Workflow runs when manually triggered using the UI
-# or API.
 on:
-  workflow_dispatch:
-    # Inputs the workflow accepts.
-    inputs:
-      name:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'Person to greet'
-        # Default value if no value is explicitly provided
-        default: 'World'
-        # Input has to be provided for the workflow to run
-        required: true
-        # The data type of the input
-        type: string
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "greet"
-  greet:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest  # Linux for speed; swap to windows-latest if Windows vibes
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
+    - uses: actions/checkout@v4  # Grab the repo
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest numpy scipy matplotlib  # Our chaos crew
+
+    - name: Run tests
+      run: |
+        pytest tests/ -v  # Verbose for CI logs—see the green rain
+
+    - name: Lint (bonus sanity)
+      run: |
+        pip install flake8
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Exit-zero for CI; tweak rules if your style's wild
+
+    - name: Upload plot on success (for PR fun)
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: entropy-plot
+        path: outputs/degradation_plot.png  # If full run; optional
+
+env:
+  OUTPUT_DIR: outputs/  # Matches script
